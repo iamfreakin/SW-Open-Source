@@ -39,9 +39,108 @@
   - 실제로 메모리를 쓰고 있는 RES가 핵심
 - SHR
   - 다른 프로세스와 공유하고 있는 shred memory의 양
+
  
 ## Linux ps 명령어
 ### 1. Linux ps란?
+- 현재 실행중인 프로세스 목록과 상태를 보여줌
+- 정확한 옵션 사용이 중요(a와 -a의 옵션이 다른것처럼)
+- ps [option]의 사용
+
+### 2. ps 옵션
+- `-A` : 모든 프로세스 출력
+- `a` : 터미널과 관련된 프로세스를 출력
+- `-a`: 세션 리더를 제외하고 데몬 프로세스처럼 터미널에 종속되지 않은 모든 프로세스를 출력
+- `-e` : 커널 프로세스를 제외한 모든 프로세스를 출력
+- `-f` : 풀 포맷을 보여줌
+- `-o` : 출력 포맷을 지정하는 옵션(pid,tty,time,cmd)
+- `-m` : 64비트 프로세스를 보여줌
+- `-p` : 특정 PID를 지정할때 사용
+- `-r` : 실행중인 프로세스를 보여줌
+- `-u` :특정 사용자의 프로세스 정보를 확인할 때 사용(사용자를 지정하지 않으면 현재를 기준)
+- `-x` : 로그인 상태에 있는 동안 아직 완료되지 않은 프로세스를 보여줌
+
+### 3. ps 명령어 사용 예시
+- `ps` 단독 사용
+![image](https://github.com/iamfreakin/SW-Open-Source/assets/113764802/7d2aa94b-9e00-4f80-9b91-3d9ffaa6b09b)
+  - 기본적으로는 프로세스 번호(PID), 프로세스가 연결된 터미널(TTY),TIME,CMD이 출력
+- `ps ax` 사용
+![image](https://github.com/iamfreakin/SW-Open-Source/assets/113764802/9df57d5d-c49b-4cef-818f-7a883d8515c3)
+  - 시스템에 동작중인 모든 프로세스를 보고싶은 때 사용 (PID,TTY,STAT,TIME,COMMAND 출력)
+- `ps aux` 사용
+![image](https://github.com/iamfreakin/SW-Open-Source/assets/113764802/4ddf20ca-b1a4-4c58-9887-04682de34dfe)
+  - 시스템에 동작중인 모든 프로세스를 소유자 정보와 함께 다양한 정보를 같이 출력(특정 프로세스는 psaux|grep apache)
+ 
+### 4. ps 명령어 사용시 나타낼수 있는 항목
+|항목|의미|
+|------|-------------------------|
+|USER|BSD계열에서 나타나는 항목으로 프로세스 소유자의 이름|
+|UID|SYSTEM V계열에서 나타나는 항목으로 프로세스 소유자의 이름|
+|PID|프로세스의 식별변호|
+|PPID|부모 프로세스 ID|
+|%CPU|CPU 사용 비율의 추정치(BSD)|
+|%MEM|메모리의 사용 비율의 추정치 (BSD|
+|VSZ|K단위 또는 페이지 단위의 가상메모리 사용량|
+|RSS|실제 메모리 사용량 (Resident Set Size)|
+|TTY|프로세스와 연결된 터미널|
+|S, STAT|현재 프로세스의 상태 코드 (S: Sys V, STAT: BSD)|
+|TIME|총 CPU 사용 시간|
+|COMMAND|프로세스의 실행 명령행|
+|STIME|프로세스가 시작된 시간 혹은 날짜|
+|C, CP|짧은 기간 동안의 CPU 사용률 (C: Sys V, CP: BSD)|
+|F|프로세스의 플래그|
+|PRI|실제 실행 우선순위|
+|NI|nice 우선순위 번호|
+
+## Linux jobs 명령어
+### 1. Linux jobs란?
+- 백그라운드에서 실행된 프로그램이나 작업 목록을 보여주는 명렁어
+- jobs [옵션] [작업번호] 명령어로 사용
+### 2. Linux jobs 옵션
+|옵션|설명|
+|------|-------------------------|
+|-l|프로세스 그룹 ID를 state 필드 앞에 출력|
+|-n|프로세스 그룹 중에 대표 프로세스 ID를 출력|
+|-p|각 프로세스 ID에 대해 한 행씩 출력|
+|command|지정한 명령어를 실행|
+  
+### 3. Linux jobs 사용 후 상태
+|상태|설명|
+|------|-------------------------|
+|Running|작업이 계속 진행중임|
+|Done|작업이 완료되어 0을 반환|
+|Done(code)|작업이 종료되었으며 0이 아닌 코드를 반환|
+|Stopped|작업이 일시 중단|
+|Stopped(SIGTSTP)|SIGTSTP 시그널이 작업을 일시 중단|
+|Stopped(SIGSTOP)|SIGSTOP 시그널이 작업을 일시 중단|
+|Stopped(SIGTTIN)|SIGTTIN 시그널이 작업을 일시 중단|
+|Stopped(SIGTTOU)|SIGTTOU 시그널이 작업을 일시 중단|
+
+## Linux kill 명령어
+### 1. Linux kill이란?
+- kill 명령어를 통해서 프로세스에 시그널을 보내서 제어하는 명령어
+- kill인 이유는 아무런 시그널이 없다면 종료하는 명렁어이기 때문이다
+- kill [옵션] [PID]
+
+### 2. Linux kill 옵션
+- `-9` : 프로세스 PID를 직접 지정하여 종료
+- `-l` : 시그널로 사용할 수 있는 시그널들을 보여줌
+
+### 3. kill 명령어의 시그널 종류
+|SIGNAL name|SIGNAL|
+|------|-------------------------|
+|SIGNIP|HUP|
+|SIGHT|INT|
+|SIGKILL|KILL|
+|SIGSEGV|SEGV|
+|SIGTERM|TERM|
+|SIGCONT|CONT|
+|SIGSTOP|STOP|
+|SIGTSTP|TSTP|
+
+
+---
+
 ---
 # 마크다운이란
 
